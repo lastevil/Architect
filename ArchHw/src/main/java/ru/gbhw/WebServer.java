@@ -1,26 +1,31 @@
 package ru.gbhw;
 
+import ru.gbhw.config.Config;
+import ru.gbhw.config.ConfigFactory;
 import ru.gbhw.logger.ConsoleLogger;
 import ru.gbhw.logger.Logger;
+import ru.gbhw.service.HandleRequest;
+import ru.gbhw.service.SocketService;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
 public class WebServer {
-
-    private static final int PORT = 8080;
-    private static String WWW = "/Users/macbook/IdeaProjects/first-geek-web-server/www";
-    private static Logger log = new ConsoleLogger();
+    private static Logger log = ConsoleLogger.createLogger();
 
     public static void main(String[] args) {
-        try (ServerSocket serverSocket = new ServerSocket(PORT)) {
-            log.info("Server started!");
+        Config config = ConfigFactory.create(args);
+        try (ServerSocket serverSocket = new ServerSocket(config.getPrt())) {
+            log.info("Server started at port: "+config.getPrt());
 
             while (true) {
                 Socket socket = serverSocket.accept();
                 log.info("New client connected!");
-                new HandleRequest(new SocketService(socket),WWW).run();
+                HandleRequest.createHandleRequest(
+                        SocketService.createSocketService(socket),
+                        config.getWwwHome()
+                ).run();
             }
         } catch (IOException e) {
             e.printStackTrace();

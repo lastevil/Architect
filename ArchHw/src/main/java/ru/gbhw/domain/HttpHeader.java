@@ -3,6 +3,12 @@ package ru.gbhw.domain;
 import ru.gbhw.domain.interfaces.ResponseSerializer;
 
 public class HttpHeader implements ResponseSerializer {
+
+    private HttpHeader(){}
+
+    public static HttpHeader createHttpHeader(){
+        return new HttpHeader();
+    }
     @Override
     public String serialize(HttpResponse httpResponse) {
         StringBuilder sb = new StringBuilder();

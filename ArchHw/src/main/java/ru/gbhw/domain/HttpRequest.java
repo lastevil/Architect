@@ -1,6 +1,5 @@
 package ru.gbhw.domain;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class HttpRequest {
@@ -13,46 +12,59 @@ public class HttpRequest {
 
     private String body;
 
-    public HttpRequest() {
-        headers = new HashMap<>();
+    private HttpRequest() {
     }
 
-    public HttpRequest(String method, String path, Map<String, String> headers, String body) {
-        this.method = method;
-        this.path = path;
-        this.headers = headers;
-        this.body = body;
+    public static Builder buildHttpRequest(){
+        return new HttpRequest.Builder();
     }
-
     public String getMethod() {
         return method;
-    }
-
-    public void setMethod(String method) {
-        this.method = method;
     }
 
     public String getPath() {
         return path;
     }
 
-    public void setPath(String path) {
-        this.path = path;
-    }
-
     public Map<String, String> getHeaders() {
         return headers;
-    }
-
-    public void setHeaders(String title, String body) {
-        this.headers.put(title,body);
     }
 
     public String getBody() {
         return body;
     }
 
-    public void setBody(String body) {
-        this.body = body;
+    public static class Builder {
+        private final HttpRequest request;
+
+        public Builder() {
+            this.request = new HttpRequest();
+        }
+
+        public Builder withMethod(String method) {
+            this.request.method = method;
+            return this;
+        }
+
+        public Builder withPath(String path) {
+            this.request.path = path;
+            return this;
+        }
+
+        public Builder withHeaders(Map<String, String> headers) {
+            this.request.headers = headers;
+            return this;
+        }
+
+        public Builder withBody(String body) {
+            this.request.body = body;
+            return this;
+        }
+
+        public HttpRequest build() {
+            return this.request;
+        }
     }
+
+
 }

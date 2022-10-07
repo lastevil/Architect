@@ -1,54 +1,81 @@
 package ru.gbhw.domain;
 
+import java.io.Reader;
+import java.nio.file.Path;
+
 public class HttpResponse {
     private double httpVersion;
     private int statusCode;
     private String contentType;
-    private HttpStatus httpStatus;
+    private String httpStatus;
+    private Reader body;
 
-    public HttpResponse(double httpVersion, int statusCode, HttpStatus httpStatus, String contentType) {
-        this.httpVersion = httpVersion;
-        this.statusCode = statusCode;
-        this.contentType = contentType;
-        this.httpStatus = httpStatus;
+    private HttpResponse() {
     }
-
-    public HttpResponse(HttpStatus httpStatus) {
-        this.httpVersion = 1.1;
-        this.statusCode = httpStatus.getStatusCode();
-        this.httpStatus = httpStatus;
-        this.contentType = "Content-Type: text/html; charset=utf-8";
+    public static Builder buildHttpResponse(){
+        return new HttpResponse.Builder();
     }
 
     public double getHttpVersion() {
         return httpVersion;
     }
 
-    public void setHttpVersion(double httpVersion) {
-        this.httpVersion = httpVersion;
-    }
-
     public int getStatusCode() {
         return statusCode;
-    }
-
-    public void setStatusCode(int statusCode) {
-        this.statusCode = statusCode;
     }
 
     public String getContentType() {
         return contentType;
     }
 
-    public void setContentType(String contentType) {
-        this.contentType = contentType;
-    }
-
     public String getStatusMsg() {
-        return httpStatus.name();
+        return httpStatus;
     }
 
-    public void setStatusMsg(HttpStatus httpStatus) {
-        this.httpStatus = httpStatus;
+    public Reader getBody() {
+        return body;
+    }
+
+    public static class Builder {
+
+        private final HttpResponse response;
+
+        public Builder() {
+            response = new HttpResponse();
+        }
+
+        public Builder withStatus(HttpStatus httpStatus) {
+            this.response.statusCode = httpStatus.getStatusCode();
+            this.response.httpStatus = httpStatus.name();
+            return this;
+        }
+
+        public Builder withHttpVersion(Double httpVersion) {
+            this.response.httpVersion = httpVersion;
+            return this;
+        }
+
+        public Builder withContentType(String contentType) {
+            this.response.contentType = contentType;
+            return this;
+        }
+
+        public Builder withBody(Reader body) {
+            this.response.body = body;
+            return this;
+        }
+
+        public HttpResponse build() {
+            if (this.response.contentType == null) {
+                withContentType("Content-Type: text/html; charset=utf-8");
+            }
+            if (this.response.httpVersion == 0) {
+                withHttpVersion(1.1);
+            }
+            if (this.response.httpStatus == null || this.response.statusCode == 0) {
+                throw new IllegalStateException("Wrong response!");
+            }
+            return this.response;
+        }
     }
 }

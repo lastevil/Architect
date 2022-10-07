@@ -1,5 +1,7 @@
-package ru.gbhw;
+package ru.gbhw.service;
 
+import ru.gbhw.domain.HttpHeader;
+import ru.gbhw.domain.HttpResponse;
 import ru.gbhw.logger.ConsoleLogger;
 import ru.gbhw.logger.Logger;
 
@@ -10,11 +12,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SocketService implements Closeable {
-    private static final Logger logger = new ConsoleLogger();
+    private static final Logger logger = ConsoleLogger.createLogger();
     private final Socket socket;
 
-    public SocketService(Socket socket){
-        this.socket=socket;
+    SocketService(Socket socket) {
+        this.socket = socket;
+    }
+
+    public static SocketService createSocketService(Socket socket) {
+        return new SocketService(socket);
     }
 
     public List<String> readRequest() {
@@ -23,7 +29,7 @@ public class SocketService implements Closeable {
                     new InputStreamReader(
                             socket.getInputStream(), StandardCharsets.UTF_8));
 
-            while (!input.ready());
+            while (!input.ready()) ;
 
             List<String> request = new ArrayList<>();
             while (input.ready()) {
@@ -37,12 +43,12 @@ public class SocketService implements Closeable {
         }
     }
 
-    public void writeResponse(String headers, Reader reader) {
+    public void writeResponse(HttpResponse httpResponse) {
         try {
             PrintWriter output = new PrintWriter(socket.getOutputStream());
-            output.print(headers);
-            if ( reader != null) {
-                reader.transferTo(output);
+            output.print(HttpHeader.createHttpHeader().serialize(httpResponse));
+            if (httpResponse.getBody() != null) {
+                httpResponse.getBody().transferTo(output);
             }
             output.flush();
         } catch (IOException ex) {
