@@ -2,8 +2,9 @@ package ru.gbhw;
 
 import ru.gbhw.config.Config;
 import ru.gbhw.config.ConfigFactory;
-import ru.gbhw.logger.ConsoleLogger;
+import ru.gbhw.logger.FileLogger;
 import ru.gbhw.logger.Logger;
+import ru.gbhw.logger.MyLogger;
 import ru.gbhw.service.HandleRequest;
 import ru.gbhw.service.SocketService;
 
@@ -12,7 +13,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class WebServer {
-    private static Logger log = ConsoleLogger.createLogger();
+    private final static Logger log = MyLogger.createLogger(FileLogger.get());
 
     public static void main(String[] args) {
         Config config = ConfigFactory.create(args);

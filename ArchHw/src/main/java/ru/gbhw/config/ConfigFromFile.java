@@ -1,8 +1,9 @@
 package ru.gbhw.config;
 
-import ru.gbhw.WebServer;
-
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Properties;
 
 class ConfigFromFile implements Config{
@@ -17,6 +18,14 @@ class ConfigFromFile implements Config{
             throw new NullPointerException("Неверный путь к файлу");
         }
         WWW = properties.getProperty("www.path");
+        Path serverDir = Paths.get(WWW);
+        if (!serverDir.toFile().exists()) {
+            try {
+                Files.createDirectories(serverDir);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
         PORT = Integer.parseInt(properties.getProperty("port"));
     }
 

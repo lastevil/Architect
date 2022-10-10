@@ -4,6 +4,7 @@ import ru.gbhw.domain.HttpHeader;
 import ru.gbhw.domain.HttpResponse;
 import ru.gbhw.logger.ConsoleLogger;
 import ru.gbhw.logger.Logger;
+import ru.gbhw.logger.MyLogger;
 
 import java.io.*;
 import java.net.Socket;
@@ -12,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SocketService implements Closeable {
-    private static final Logger logger = ConsoleLogger.createLogger();
+    private static final Logger logger = MyLogger.createLogger(ConsoleLogger.get());
     private final Socket socket;
 
     SocketService(Socket socket) {

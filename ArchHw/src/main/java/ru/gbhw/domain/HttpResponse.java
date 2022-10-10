@@ -1,7 +1,6 @@
 package ru.gbhw.domain;
 
 import java.io.Reader;
-import java.nio.file.Path;
 
 public class HttpResponse {
     private double httpVersion;

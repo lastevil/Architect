@@ -6,6 +6,7 @@ import ru.gbhw.domain.HttpResponse;
 import ru.gbhw.domain.HttpStatus;
 import ru.gbhw.logger.ConsoleLogger;
 import ru.gbhw.logger.Logger;
+import ru.gbhw.logger.MyLogger;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -15,10 +16,10 @@ import java.nio.file.Paths;
 
 public class HandleRequest extends Thread {
 
-    private SocketService socketService;
-    private String WWW;
+    private final SocketService socketService;
+    private final String WWW;
 
-    private Logger log = ConsoleLogger.createLogger();
+    private final Logger log = MyLogger.createLogger(ConsoleLogger.get());
 
     private HandleRequest(SocketService socketService, String folder) {
         this.socketService = socketService;
@@ -36,7 +37,7 @@ public class HandleRequest extends Thread {
                 .parse(socketService.readRequest());
 
         Path path = Paths.get(WWW, request.getPath());
-        if (!Files.exists(path)) {
+        if (!Files.exists(path) || path.toFile().isDirectory()) {
             socketService.writeResponse(
                     HttpResponse.buildHttpResponse()
                             .withStatus(HttpStatus.NOT_FOUND)
