@@ -52,6 +52,7 @@ public class SocketService implements Closeable {
                 httpResponse.getBody().transferTo(output);
             }
             output.flush();
+            output.close();
         } catch (IOException ex) {
             throw new IllegalStateException(ex);
         }

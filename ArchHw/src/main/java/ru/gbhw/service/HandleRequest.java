@@ -2,23 +2,15 @@ package ru.gbhw.service;
 
 import ru.gbhw.domain.HttpRequest;
 import ru.gbhw.domain.HttpRequestParser;
-import ru.gbhw.domain.HttpResponse;
-import ru.gbhw.domain.HttpStatus;
 import ru.gbhw.logger.ConsoleLogger;
 import ru.gbhw.logger.Logger;
 import ru.gbhw.logger.MyLogger;
-
-import java.io.IOException;
-import java.io.StringReader;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import ru.gbhw.service.handle.HandleResponses;
 
 public class HandleRequest extends Thread {
 
     private final SocketService socketService;
     private final String WWW;
-
     private final Logger log = MyLogger.createLogger(ConsoleLogger.get());
 
     private HandleRequest(SocketService socketService, String folder) {
@@ -36,27 +28,10 @@ public class HandleRequest extends Thread {
                 .createHttpRequestParser()
                 .parse(socketService.readRequest());
 
-        Path path = Paths.get(WWW, request.getPath());
-        if (!Files.exists(path) || path.toFile().isDirectory()) {
-            socketService.writeResponse(
-                    HttpResponse.buildHttpResponse()
-                            .withStatus(HttpStatus.NOT_FOUND)
-                            .withBody(new StringReader("<h1>Файл не найден!</h1>\n"))
-                            .build()
-            );
-            return;
-        }
-        try {
-            socketService.writeResponse(
-                    HttpResponse.buildHttpResponse()
-                            .withStatus(HttpStatus.OK)
-                            .withBody(Files.newBufferedReader(path))
-                            .build()
-            );
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        log.info("Client disconnected!");
+        socketService.writeResponse(
+                HandleResponses.create().createResponse(WWW, request)
+        );
+        return;
     }
 }
 
