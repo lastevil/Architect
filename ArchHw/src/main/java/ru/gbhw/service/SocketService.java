@@ -53,6 +53,7 @@ public class SocketService implements Closeable {
             }
             output.flush();
             output.close();
+            close();
         } catch (IOException ex) {
             throw new IllegalStateException(ex);
         }

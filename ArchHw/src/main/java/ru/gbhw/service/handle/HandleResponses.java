@@ -34,10 +34,9 @@ public class HandleResponses {
     }
 
     public HttpResponse createResponse(String folder, HttpRequest request) {
-        HttpResponse response = RESPONSE_MAP.get(request.getMethod()).handel(folder, request);
-        if (response == null) {
+        if (!RESPONSE_MAP.keySet().contains(request.getMethod())) {
             return RESPONSE_MAP.get("NOT_ALLOWED").handel(folder, request);
         }
-        return response;
+        return RESPONSE_MAP.get(request.getMethod()).handel(folder, request);
     }
 }
