@@ -8,9 +8,11 @@ import java.io.StringReader;
 
 @HttpMethod(name = "NOT_ALLOWED")
 public class NotAllowedMethodHandle implements MethodHandler {
-    NotAllowedMethodHandle() {
+    private NotAllowedMethodHandle() {
     }
-
+    public static MethodHandler create(){
+        return new NotAllowedMethodHandle();
+    }
     @Override
     public HttpResponse handel(String folder, HttpRequest request) {
         return HttpResponse.buildHttpResponse()

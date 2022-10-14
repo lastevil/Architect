@@ -4,6 +4,7 @@ import org.reflections.Reflections;
 import ru.gbhw.domain.HttpRequest;
 import ru.gbhw.domain.HttpResponse;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -20,8 +21,10 @@ public class HandleResponses {
 
             String myAnnotation = clazz.getDeclaredAnnotation(HttpMethod.class).name();
             try {
-                RESPONSE_MAP.put(myAnnotation, (MethodHandler) clazz.newInstance());
-            } catch (InstantiationException e) {
+                RESPONSE_MAP.put(myAnnotation, (MethodHandler) clazz.getDeclaredMethod("create").invoke(null));
+            }  catch (NoSuchMethodException e) {
+                throw new RuntimeException(e);
+            } catch (InvocationTargetException e) {
                 throw new RuntimeException(e);
             } catch (IllegalAccessException e) {
                 throw new RuntimeException(e);

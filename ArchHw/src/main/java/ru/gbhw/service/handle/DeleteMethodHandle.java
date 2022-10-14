@@ -8,7 +8,10 @@ import java.io.StringReader;
 
 @HttpMethod(name = "DELETE")
 public class DeleteMethodHandle implements MethodHandler {
-    DeleteMethodHandle() {
+    private DeleteMethodHandle() {
+    }
+    public static MethodHandler create(){
+        return new DeleteMethodHandle();
     }
     @Override
     public HttpResponse handel(String folder, HttpRequest request) {

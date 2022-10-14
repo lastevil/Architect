@@ -8,8 +8,10 @@ import java.io.StringReader;
 
 @HttpMethod(name = "POST")
 public class PostMethodHandle implements MethodHandler{
-    PostMethodHandle(){}
-
+    private PostMethodHandle(){}
+    public static MethodHandler create(){
+        return new PostMethodHandle();
+    }
     @Override
     public HttpResponse handel(String folder, HttpRequest request) {
         // Path path = Paths.get(folder, request.getPath());

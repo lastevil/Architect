@@ -13,7 +13,12 @@ import java.nio.file.Paths;
 @HttpMethod(name = "GET")
 public class GetMethodHandle implements MethodHandler {
 
-    GetMethodHandle(){}
+    private GetMethodHandle() {
+    }
+
+    public static MethodHandler create() {
+        return new GetMethodHandle();
+    }
 
     @Override
     public HttpResponse handel(String folder, HttpRequest request) {
