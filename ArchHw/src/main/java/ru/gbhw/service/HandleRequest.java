@@ -11,15 +11,17 @@ public class HandleRequest extends Thread {
 
     private final SocketService socketService;
     private final String WWW;
+    private final HandleResponses responses;
     private final Logger log = MyLogger.createLogger(ConsoleLogger.get());
 
-    private HandleRequest(SocketService socketService, String folder) {
+    private HandleRequest(SocketService socketService, String folder, HandleResponses responses) {
         this.socketService = socketService;
         this.WWW = folder;
+        this.responses = responses;
     }
 
-    public static HandleRequest createHandleRequest(SocketService socketService, String folder) {
-        return new HandleRequest(socketService, folder);
+    public static HandleRequest createHandleRequest(SocketService socketService, String folder, HandleResponses responses) {
+        return new HandleRequest(socketService, folder, responses);
     }
 
     @Override
@@ -27,9 +29,8 @@ public class HandleRequest extends Thread {
         HttpRequest request = HttpRequestParser
                 .createHttpRequestParser()
                 .parse(socketService.readRequest());
-
         socketService.writeResponse(
-                HandleResponses.create().createResponse(WWW, request)
+                responses.createResponse(WWW, request)
         );
         return;
     }

@@ -7,6 +7,7 @@ import ru.gbhw.logger.Logger;
 import ru.gbhw.logger.MyLogger;
 import ru.gbhw.service.HandleRequest;
 import ru.gbhw.service.SocketService;
+import ru.gbhw.service.handle.HandleResponses;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -19,12 +20,14 @@ public class WebServer {
         Config config = ConfigFactory.create(args);
         try (ServerSocket serverSocket = new ServerSocket(config.getPrt())) {
             log.info("Server started at port: "+config.getPrt());
+            HandleResponses responses = HandleResponses.create();
             while (true) {
                 Socket socket = serverSocket.accept();
                 log.info("New client connected!");
                 HandleRequest.createHandleRequest(
                         SocketService.createSocketService(socket),
-                        config.getWwwHome()
+                        config.getWwwHome(),
+                        responses
                 ).run();
                 log.info("Client disconnected!");
             }

@@ -10,6 +10,7 @@
     <modules>
         <module>ArchHw</module>
         <module>SysPatternsHW</module>
+        <module>mvcHW</module>
     </modules>
     <packaging>pom</packaging>
 

@@ -18,15 +18,10 @@ public class HandleResponses {
                 .getTypesAnnotatedWith(HttpMethod.class);
 
         for (Class<?> clazz : handles) {
-
             String myAnnotation = clazz.getDeclaredAnnotation(HttpMethod.class).name();
             try {
                 RESPONSE_MAP.put(myAnnotation, (MethodHandler) clazz.getDeclaredMethod("create").invoke(null));
-            }  catch (NoSuchMethodException e) {
-                throw new RuntimeException(e);
-            } catch (InvocationTargetException e) {
-                throw new RuntimeException(e);
-            } catch (IllegalAccessException e) {
+            }  catch (Exception e) {
                 throw new RuntimeException(e);
             }
         }
